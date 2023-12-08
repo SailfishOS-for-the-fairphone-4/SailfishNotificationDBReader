@@ -18,12 +18,15 @@ Utility program that reads the notification database
 
 %build
 
-%cmake -DCMAKE_INSTALL_PREFIX=%{buildroot} ..
-make %{?_smp_mflags}
+%cmake .
+%make_build %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-make install
+%make_install DESTDIR=%{buildroot}
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
+
+%files
+%defattr(-,root,root,-)
+/usr/bin/SailFishNotificationDBReader
