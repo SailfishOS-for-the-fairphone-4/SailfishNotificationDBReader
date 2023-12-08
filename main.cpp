@@ -169,7 +169,16 @@ int main(int argc, char** argv)
         Notification notification;
         Notification::LoadFromItem(item, notification);
 
-        std::cout << std::to_string(notification.GetId()) << "\n" << notification.GetAppName() << "\n" << notification.GetSummary() << std::endl << std::endl;
+        std::cout << "ID = " << std::to_string(notification.GetId()) << "\n"
+                  << "AppName = " << notification.GetAppName() << "\n"
+                  << "AppIcon = " << notification.GetAppIcon() << "\n"
+                  << "Summary = " << notification.GetSummary() << "\n"
+                  << "Body = " << notification.GetBody() << "\n"
+                  << "ExpireTimeout = " << std::to_string(notification.GetExpireTimeout()) << "\n"
+                  << "DisambiguatedAppName = " << notification.GetDisambiguatedAppName() << "\n"
+                  << "ExplicitAppName = " << notification.GetExplicitAppName() << "\n"
+                  << "AppIconOrigin = " << notification.GetAppIconOrigin() << "\n"
+                  << std::endl;
     }
 
     return 0;
