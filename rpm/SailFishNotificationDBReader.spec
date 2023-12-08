@@ -18,12 +18,12 @@ Utility program that reads the notification database
 
 %build
 
-%cmake ..
+%cmake -DCMAKE_INSTALL_PREFIX=%{buildroot} ..
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-cmake --install .
+make install
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
