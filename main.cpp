@@ -147,15 +147,6 @@ private:
     std::string _appIconOrigin;
 };
 
-static int CallBack(void *NotUsed, int argc, char **argv, char **azColName)
-{
-    for (int i = 0; i < argc; i++)
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-
-    printf("\n");
-    return 0;
-}
-
 int main(int argc, char** argv)
 {
     if (argc != 2)
