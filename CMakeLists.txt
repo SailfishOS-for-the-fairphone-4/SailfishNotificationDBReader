@@ -5,3 +5,5 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(SailFishNotificationDBReader main.cpp)
 target_link_libraries(SailFishNotificationDBReader sqlite3)
+
+install(TARGETS SailFishNotificationDBReader DESTINATION bin)
