@@ -15,15 +15,18 @@ Utility program that reads the notification database
 
 %prep
 %setup -q -n %{name}-%{version}
+mkdir build
 
 %build
+cd build
 
 %cmake ..
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-make install
+cd build
+cmake --install .
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
