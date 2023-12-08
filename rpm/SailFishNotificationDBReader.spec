@@ -10,3 +10,18 @@ Requires: sqlite3
 
 %description
 Utility program that reads the notification database
+
+%prep
+%setup -q -n %{name}-%{version}
+
+%build
+
+%cmake ..
+%make %{?_smp_mflags}
+
+%install
+rm -rf %{buildroot}
+%make install
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
