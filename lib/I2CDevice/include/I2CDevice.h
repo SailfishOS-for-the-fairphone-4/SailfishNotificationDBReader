@@ -15,11 +15,37 @@
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 
+#include <vector>
+
+#include <cstdint>
+
 #include <array>
 #include <string>
 #include <unistd.h> //Posix syscalls
 
-class I2cDevice {
+struct I2CRegister
+{
+public:
+    explicit I2CRegister(uint8_t registerToRead)
+    : _registerToRead(registerToRead)
+    { }
+
+    uint8_t &GetResult()
+    {
+        return _result;
+    }
+
+    const uint8_t& GetRegisterToRead() const
+    {
+        return _registerToRead;
+    }
+
+private:
+    uint8_t _registerToRead;
+    uint8_t _result{};
+};
+
+class I2CDevice {
 private:
     int i2c_adapter_number;
     int i2c_address;
@@ -42,7 +68,7 @@ public:
      *
      * @see I2cDevice
      */
-    I2cDevice(int adapter_number, int i2c_address);
+    I2CDevice(int adapter_number, int i2c_address);
 
     /**
      * @brief Destructor for the I2cDevice class.
@@ -53,15 +79,14 @@ public:
      *
      * @see I2cDevice
      */
-    ~I2cDevice();
+    ~I2CDevice();
 
     /**
      * @brief Reads data from the I2C device.
      *
      * This function reads data from the I2C device using a series of I2C write and read operations.
      *
-     * @param data Pointer to the buffer where the read data will be stored.
-     * @param size The number of elements to read from the buffer.
+     * @param registers Vector of registers to read.
      *
      * @return 0 on success, -1 on write error, -2 on read error.
      *
@@ -75,15 +100,14 @@ public:
      *
      * @see I2cDevice
      */
-    int getData(int * data, std::size_t size);
+    int GetData(std::vector<I2CRegister>& registers);
 
     /**
      * @brief Sends data to the I2C device.
      *
      * This function sends data to the I2C device using a single I2C write operation.
      *
-     * @param data Pointer to the buffer containing the data to be sent.
-     * @param size The number of elements in the data buffer.
+     * @param data Vector of data to send.
      *
      * @return 0 on success, -1 on write error.
      *
@@ -96,7 +120,7 @@ public:
      *
      * @see I2cDevice
      */
-    int sentData(const int * data, std::size_t size);
+    int SendData(const std::vector<uint8_t>& data);
 }; // I2cDevice
 
 #endif //__I2CDEVICE_H__

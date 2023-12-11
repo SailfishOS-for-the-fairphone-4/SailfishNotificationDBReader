@@ -166,7 +166,7 @@ int main(int argc, char** argv)
     SQLite3Result result;
     sqlite3_exec(dataBase, "SELECT * FROM notifications", SQLite3Result::LoadFromQuery, &result, &errorMessage);
 
-    I2cDevice device(0, 0x18);
+    I2CDevice device(0, 0x18);
 
     for (auto &item : result.GetItems())
     {
@@ -184,6 +184,13 @@ int main(int argc, char** argv)
                   << "AppIconOrigin = " << notification.GetAppIconOrigin() << "\n"
                   << std::endl;
     }
+
+    std::vector<I2CRegister> registers {
+            I2CRegister(1),
+            I2CRegister(2)
+    };
+
+    device.GetData(registers);
 
     return 0;
 }
