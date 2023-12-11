@@ -5,6 +5,8 @@
 
 #include <sqlite3.h>
 
+#include <I2CDevice.h>
+
 struct {
     std::string DBPath;
 } Arguments;
@@ -163,6 +165,8 @@ int main(int argc, char** argv)
     char *errorMessage = nullptr;
     SQLite3Result result;
     sqlite3_exec(dataBase, "SELECT * FROM notifications", SQLite3Result::LoadFromQuery, &result, &errorMessage);
+
+    I2cDevice device(0, 0x18);
 
     for (auto &item : result.GetItems())
     {
