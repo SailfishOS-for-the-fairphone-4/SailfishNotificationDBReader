@@ -185,12 +185,8 @@ int main(int argc, char** argv)
                   << std::endl;
     }
 
-    std::vector<I2CRegister> registers {
-            I2CRegister(1),
-            I2CRegister(2)
-    };
-
-    device.GetData(registers);
+    std::vector<__u8> testData = { 'a', 'b', 'c', 'd' };
+    device.SendData(testData);
 
     return 0;
 }

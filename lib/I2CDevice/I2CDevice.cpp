@@ -38,12 +38,28 @@ I2CDevice::~I2CDevice()
 
 int I2CDevice::SendData(const std::vector<uint8_t>& data)
 {
-    /*
-     * Using I2C Write, equivalent of
-     * i2c_smbus_write_word_data(file, reg, 0x6543)
-     */
-    if (write(file, data.data(), data.size()) != data.size())
-        return -1;
+    uint16_t payloadSize = data.size();
+    std::vector<uint8_t> dataToSend;
+
+    for (size_t i = 0; i < sizeof(payloadSize); i++)
+        dataToSend.emplace_back(((uint8_t*)&payloadSize)[i]);
+
+    dataToSend.insert(dataToSend.end(), data.begin(),data.end());
+
+    i2c_msg message {
+        .addr = (__u16)i2c_address,
+        .flags = I2C_M_STOP,
+        .len = (__u16)dataToSend.size(),
+        .buf = (__u8*)dataToSend.data()
+    };
+
+    i2c_rdwr_ioctl_data transaction{
+        .msgs = &message,
+        .nmsgs = 1
+    };
+
+    if (ioctl(file, I2C_RDWR, &transaction) < 0)
+        throw std::runtime_error("Failed to write data to I2C device");
 
     return 0;
 }
