@@ -10,8 +10,8 @@
 #define __I2CDEVICE_H__
 
 #include <fcntl.h>
-#include <i2c/smbus.h>
 #include <iostream>
+#include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 
