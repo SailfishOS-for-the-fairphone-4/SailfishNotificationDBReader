@@ -2,14 +2,13 @@
 #include <vector>
 #include <string>
 
-#include <sqlite3.h>
-
-#include "SQLite3Result.h"
+#include "SQLite/SQLite3Result.h"
 
 #include "Notification.h"
 #include "NotificationSerializer.h"
 
 #include "Serializer.h"
+#include "SQLite/SQLite3.h"
 
 struct {
     std::string DBPath;
@@ -25,12 +24,10 @@ int main(int argc, char** argv)
 
     Arguments.DBPath = std::string(argv[1]);
 
-    sqlite3 *dataBase;
-    sqlite3_open(Arguments.DBPath.c_str(), &dataBase);
+    SQLite3 database(Arguments.DBPath);
 
-    char *errorMessage = nullptr;
     SQLite3Result result;
-    sqlite3_exec(dataBase, "SELECT * FROM notifications", SQLite3Result::LoadFromQuery, &result, &errorMessage);
+    database.PerformQuery("SELECT * FROM notifications", result);
 
     //I2CDevice device(0, 0x18);
 
@@ -40,8 +37,7 @@ int main(int argc, char** argv)
         Notification::LoadFromItem(item, notification);
 
         SQLite3Result extrasResult;
-        sqlite3_exec(dataBase, ("SELECT * FROM hints WHERE id = " + std::to_string(notification.GetId())).c_str(),
-                SQLite3Result::LoadFromQuery, &extrasResult, &errorMessage);
+        database.PerformQuery("SELECT * FROM hints WHERE id = " + std::to_string(notification.GetId()), extrasResult);
 
         notification.LoadExtras(extrasResult.GetItems());
 

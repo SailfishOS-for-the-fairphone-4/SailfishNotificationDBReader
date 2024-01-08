@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include "Notification.h"
-#include "SQLite3Item.h"
+#include "SQLite/SQLite3Item.h"
 
 #define TIMESTAMP_HINT_NAME "x-nemo-timestamp"
 

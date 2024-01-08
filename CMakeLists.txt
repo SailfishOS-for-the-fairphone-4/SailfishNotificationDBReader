@@ -11,12 +11,14 @@ add_executable(SailFishNotificationDBReader main.cpp
         NotificationSerializer.h
         Notification.cpp
         Notification.h
-        SQLite3Item.cpp
-        SQLite3Item.h
-        SQLite3Result.cpp
-        SQLite3Result.h
+        SQLite/SQLite3Item.cpp
+        SQLite/SQLite3Item.h
+        SQLite/SQLite3Result.cpp
+        SQLite/SQLite3Result.h
         Serializer.cpp
-        Serializer.h)
+        Serializer.h
+        SQLite/SQLite3.cpp
+        SQLite/SQLite3.h)
 target_link_libraries(SailFishNotificationDBReader I2CDevice sqlite3)
 
 install(TARGETS SailFishNotificationDBReader DESTINATION bin)
