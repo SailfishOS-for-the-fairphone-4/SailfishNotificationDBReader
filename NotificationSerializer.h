@@ -10,12 +10,18 @@
 
 #include "Notification.h"
 
-namespace NotificationSerializer
+class NotificationSerializer
 {
+public:
     using ErrorCode_t = int32_t;
 
-    ErrorCode_t Serialize(const Notification& notification, std::vector<uint8_t>& result);
-}
+    static ErrorCode_t Serialize(const Notification& notification, std::vector<uint8_t>& result);
+    static ErrorCode_t Deserialize(const std::vector<uint8_t>& data, Notification& result);
+
+private:
+    NotificationSerializer() = default;
+    ~NotificationSerializer() = default;
+};
 
 
 #endif //SAILFISHNOTIFICATIONDBREADER_NOTIFICATIONSERIALIZER_H

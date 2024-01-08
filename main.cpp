@@ -1,11 +1,9 @@
 #include <iostream>
-#include <map>
 #include <vector>
 #include <string>
 
 #include <sqlite3.h>
 
-#include <I2CDevice.h>
 #include "SQLite3Result.h"
 
 #include "Notification.h"
@@ -54,6 +52,9 @@ int main(int argc, char** argv)
 
         std::vector<uint8_t> serializedNotification;
         NotificationSerializer::Serialize(notification, serializedNotification);
+
+        Notification test;
+        NotificationSerializer::Deserialize(serializedNotification, test);
 
         std::vector<uint8_t> messageToSend;
         Serializer::CreateMessage(serializedNotification, messageToSend);

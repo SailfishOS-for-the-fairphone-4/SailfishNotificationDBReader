@@ -15,6 +15,7 @@ class SQLite3Item;
 class Notification
 {
 public:
+    friend class NotificationSerializer;
     static const constexpr size_t COLUMN_COUNT = 9;
 
     static int LoadFromItem(const SQLite3Item& item, Notification& result);

@@ -5,16 +5,24 @@
 #include "NotificationSerializer.h"
 #include "Serializer.h"
 
-namespace NotificationSerializer
+NotificationSerializer::ErrorCode_t NotificationSerializer::Serialize(const Notification& notification, std::vector<uint8_t>& result)
 {
-    ErrorCode_t Serialize(const Notification& notification, std::vector<uint8_t>& result)
-    {
-        Serializer::SerializeInteger(notification.GetId(), result);
+    Serializer::SerializeInteger(notification.GetId(), result);
 
-        Serializer::SerializeString(notification.GetAppName(), result);
-        Serializer::SerializeString(notification.GetBody(), result);
-        Serializer::SerializeString("", result);
+    Serializer::SerializeString(notification.GetAppName(), result);
+    Serializer::SerializeString(notification.GetBody(), result);
+    Serializer::SerializeString("", result);
 
-        return 0;
-    }
+    return 0;
+}
+
+NotificationSerializer::ErrorCode_t NotificationSerializer::Deserialize(const std::vector<uint8_t>& data, Notification& result)
+{
+    auto cursor = data.begin();
+    Serializer::DeserializeInteger(cursor, result._id);
+
+    Serializer::DeserializeString(cursor, result._appName);
+    Serializer::DeserializeString(cursor, result._body);
+
+    return 0;
 }
