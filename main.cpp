@@ -39,6 +39,12 @@ int main(int argc, char** argv)
         Notification notification;
         Notification::LoadFromItem(item, notification);
 
+        SQLite3Result extrasResult;
+        sqlite3_exec(dataBase, ("SELECT * FROM hints WHERE id = " + std::to_string(notification.GetId())).c_str(),
+                SQLite3Result::LoadFromQuery, &extrasResult, &errorMessage);
+
+        notification.LoadExtras(extrasResult.GetItems());
+
         std::cout << "ID = " << std::to_string(notification.GetId()) << "\n"
                   << "AppName = " << notification.GetAppName() << "\n"
                   << "AppIcon = " << notification.GetAppIcon() << "\n"
@@ -47,8 +53,11 @@ int main(int argc, char** argv)
                   << "ExpireTimeout = " << std::to_string(notification.GetExpireTimeout()) << "\n"
                   << "DisambiguatedAppName = " << notification.GetDisambiguatedAppName() << "\n"
                   << "ExplicitAppName = " << notification.GetExplicitAppName() << "\n"
-                  << "AppIconOrigin = " << notification.GetAppIconOrigin() << "\n"
-                  << std::endl;
+                  << "AppIconOrigin = " << notification.GetAppIconOrigin() << "\n";
+
+        std::cout << "Extras.Timestamp = " << notification.GetExtras().Timestamp << "\n";
+
+        std::cout << std::endl;
 
         std::vector<uint8_t> serializedNotification;
         NotificationSerializer::Serialize(notification, serializedNotification);

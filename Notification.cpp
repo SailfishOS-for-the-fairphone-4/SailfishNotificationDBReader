@@ -2,8 +2,11 @@
 // Created by stolij on 12/22/23.
 //
 
+#include <algorithm>
 #include "Notification.h"
 #include "SQLite3Item.h"
+
+#define TIMESTAMP_HINT_NAME "x-nemo-timestamp"
 
 int Notification::LoadFromItem(const SQLite3Item& item, Notification& result)
 {
@@ -21,4 +24,15 @@ int Notification::LoadFromItem(const SQLite3Item& item, Notification& result)
     result._appIconOrigin = item["app_icon_origin"];
 
     return true;
+}
+
+int Notification::LoadExtras(const std::vector<SQLite3Item>& extras)
+{
+    auto timestampExtra = std::find_if(extras.begin(), extras.end(),
+            [](const SQLite3Item& item) { return item["hint"] == TIMESTAMP_HINT_NAME; });
+
+    if (timestampExtra != extras.end())
+        _extras.Timestamp = timestampExtra->operator[]("value");
+
+    return 0;
 }

@@ -9,6 +9,7 @@
 #include <cstdint>
 
 #include <string>
+#include <vector>
 
 class SQLite3Item;
 
@@ -18,7 +19,14 @@ public:
     friend class NotificationSerializer;
     static const constexpr size_t COLUMN_COUNT = 9;
 
+    struct Extras
+    {
+        std::string Timestamp;
+    };
+
     static int LoadFromItem(const SQLite3Item& item, Notification& result);
+
+    int LoadExtras(const std::vector<SQLite3Item>& extras);
 
     [[nodiscard]]
     int32_t GetId() const
@@ -74,6 +82,12 @@ public:
         return _appIconOrigin;
     }
 
+    [[nodiscard]]
+    const Extras& GetExtras() const
+    {
+        return _extras;
+    }
+
 private:
     int32_t _id = 0;
     std::string _appName;
@@ -84,6 +98,8 @@ private:
     std::string _disambiguatedAppName;
     std::string _explicitAppName;
     std::string _appIconOrigin;
+
+    Extras _extras;
 };
 
 
