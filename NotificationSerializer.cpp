@@ -7,11 +7,11 @@
 
 NotificationSerializer::ErrorCode_t NotificationSerializer::Serialize(const Notification& notification, std::vector<uint8_t>& result)
 {
-    Serializer::SerializeInteger(notification.GetId(), result);
+    Serializer::SerializeInteger(notification._id, result);
 
-    Serializer::SerializeString(notification.GetAppName(), result);
-    Serializer::SerializeString(notification.GetBody(), result);
-    Serializer::SerializeString(notification.GetExtras().Timestamp, result);
+    Serializer::SerializeString(notification._appName, result);
+    Serializer::SerializeString(notification._body, result);
+    Serializer::SerializeString(notification._extras.Timestamp, result);
 
     return 0;
 }
