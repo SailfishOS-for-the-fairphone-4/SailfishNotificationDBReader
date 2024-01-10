@@ -19,14 +19,29 @@ namespace Serializer
         return 0;
     }
 
-    ErrorCode_t CreateMessage(const std::vector<uint8_t>& payload, std::vector<uint8_t>& result)
+    ErrorCode_t CreateMessage(const std::vector<uint8_t>& payload, std::vector<std::vector<uint8_t>>& result, size_t maxChunkSize)
     {
         auto payloadSize = payload.size();
         if (payloadSize > std::numeric_limits<PayloadSize_t>::max())
             return -1;
 
-        SerializeInteger((PayloadSize_t)payload.size(), result);
-        result.insert(result.end(), payload.begin(), payload.end());
+        size_t chunkCount = (payload.size() / maxChunkSize) + 1;
+
+        size_t bytesRemaining = payloadSize;
+        std::vector<uint8_t> chunkData = SerializeInteger((PayloadSize_t)payloadSize);
+        while (bytesRemaining > 0)
+        {
+            size_t currentChunkLength = bytesRemaining > maxChunkSize ? maxChunkSize : bytesRemaining;
+
+            chunkData.insert(chunkData.end(),
+                    payload.begin() + (payloadSize - bytesRemaining),
+                    payload.begin() + currentChunkLength);
+
+            bytesRemaining -= currentChunkLength;
+            result.emplace_back(chunkData);
+
+            chunkData.clear();
+        }
 
         return 0;
     }
