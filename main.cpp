@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     SQLite3Result result;
     database.PerformQuery("SELECT * FROM notifications", result);
 
-    I2CDevice device(0, 0x0E);
+    I2CDevice device(0, 0x51);
 
     for (auto &item : result.GetItems())
     {
