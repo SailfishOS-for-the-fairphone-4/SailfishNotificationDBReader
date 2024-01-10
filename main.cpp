@@ -14,24 +14,26 @@
 
 struct {
     std::string DBPath;
+    uint8_t DeviceAddress;
 } Arguments;
 
 int main(int argc, char** argv)
 {
-    if (argc != 2)
+    if (argc != 3)
     {
-        std::cout << "Usage: " << argv[0] << " DBPath" << std::endl;
+        std::cout << "Usage: " << argv[0] << " DeviceAddress DBPath" << std::endl;
         return 1;
     }
 
-    Arguments.DBPath = std::string(argv[1]);
+    Arguments.DeviceAddress = std::stoi(argv[1], nullptr, 16);
+    Arguments.DBPath = std::string(argv[2]);
 
     SQLite3 database(Arguments.DBPath);
 
     SQLite3Result result;
     database.PerformQuery("SELECT * FROM notifications", result);
 
-    I2CDevice device(0, 0x51);
+    I2CDevice device(0, Arguments.DeviceAddress);
 
     for (auto &item : result.GetItems())
     {
