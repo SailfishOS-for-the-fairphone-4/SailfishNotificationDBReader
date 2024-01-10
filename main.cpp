@@ -7,6 +7,8 @@
 #include "Notification.h"
 #include "NotificationSerializer.h"
 
+#include "I2CDevice.h"
+
 #include "Serializer.h"
 #include "SQLite/SQLite3.h"
 
@@ -29,7 +31,7 @@ int main(int argc, char** argv)
     SQLite3Result result;
     database.PerformQuery("SELECT * FROM notifications", result);
 
-    //I2CDevice device(0, 0x18);
+    I2CDevice device(1, 0x0E);
 
     for (auto &item : result.GetItems())
     {
@@ -61,10 +63,10 @@ int main(int argc, char** argv)
         Notification test;
         NotificationSerializer::Deserialize(serializedNotification, test);
 
-        std::vector<uint8_t> messageToSend;
-        Serializer::CreateMessage(serializedNotification, messageToSend);
+        std::vector<std::vector<uint8_t>> messageToSend;
+        Serializer::CreateMessage(serializedNotification, messageToSend, 240);
 
-        //device.SendData(testData);
+        device.SendData(messageToSend[0]);
     }
 
     return 0;
