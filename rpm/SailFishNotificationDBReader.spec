@@ -1,7 +1,7 @@
 Name: sailfish-notification-db-reader
 
 Summary: Utility program that reads the notification database
-Version: 1.0.0
+Version: 1.0.1
 Release: 1
 License: Custom
 URL: https://github.com/SailfishOS-for-the-fairphone-4/SailfishNotificationDBReader
