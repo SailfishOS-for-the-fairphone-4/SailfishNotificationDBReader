@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <thread>
 
 #include "SQLite/SQLite3Result.h"
 
@@ -15,18 +16,20 @@
 struct {
     std::string DBPath;
     uint8_t DeviceAddress;
+    time_t SendDelay;
 } Arguments;
 
 int main(int argc, char** argv)
 {
-    if (argc != 3)
+    if (argc != 4)
     {
-        std::cout << "Usage: " << argv[0] << " DeviceAddress DBPath" << std::endl;
+        std::cout << "Usage: " << argv[0] << " DeviceAddress DBPath SendDelay" << std::endl;
         return 1;
     }
 
     Arguments.DeviceAddress = std::stoi(argv[1], nullptr, 16);
     Arguments.DBPath = std::string(argv[2]);
+    Arguments.SendDelay = std::stoll(argv[3], nullptr, 10);
 
     SQLite3 database(Arguments.DBPath);
 
@@ -69,6 +72,7 @@ int main(int argc, char** argv)
         Serializer::CreateMessage(serializedNotification, messageToSend, 240);
 
         device.SendData(messageToSend[0]);
+        std::this_thread::sleep_for(std::chrono::milliseconds(Arguments.SendDelay));
     }
 
     return 0;
