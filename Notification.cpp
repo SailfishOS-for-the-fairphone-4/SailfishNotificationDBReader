@@ -47,7 +47,7 @@ int Notification::LoadExtras(const std::vector<SQLite3Item>& extras)
         auto time = ISO8601StringToTimePoint(timestampExtra->operator[]("value"));
 
         std::stringstream stream;
-        auto test = std::localtime(&time);
+        auto test = std::gmtime(&time);
         stream << std::put_time(test, "%H:%M");
 
         _extras.Timestamp = stream.str();
