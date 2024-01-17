@@ -5,8 +5,19 @@
 #include <algorithm>
 #include "Notification.h"
 #include "SQLite/SQLite3Item.h"
+#include <sstream>
+#include <chrono>
+#include <iomanip>
 
 #define TIMESTAMP_HINT_NAME "x-nemo-timestamp"
+
+time_t ISO8601StringToTimePoint(const std::string& encoded)
+{
+    std::tm result = {};
+
+    strptime(encoded.c_str(), "%FT%T%z", &result);
+    return std::mktime(&result);
+}
 
 int Notification::LoadFromItem(const SQLite3Item& item, Notification& result)
 {
@@ -32,7 +43,15 @@ int Notification::LoadExtras(const std::vector<SQLite3Item>& extras)
             [](const SQLite3Item& item) { return item["hint"] == TIMESTAMP_HINT_NAME; });
 
     if (timestampExtra != extras.end())
-        _extras.Timestamp = timestampExtra->operator[]("value");
+    {
+        auto time = ISO8601StringToTimePoint(timestampExtra->operator[]("value"));
+
+        std::stringstream stream;
+        auto test = std::localtime(&time);
+        stream << std::put_time(test, "%H:%M");
+
+        _extras.Timestamp = stream.str();
+    }
 
     return 0;
 }
